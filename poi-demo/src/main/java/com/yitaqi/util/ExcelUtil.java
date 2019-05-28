@@ -20,7 +20,7 @@ import java.util.List;
  * @date 2019/5/27
  */
 public class ExcelUtil {
-    public static void exportExcel(List<List<String>> data, List<String> headers, String sheetName, HttpServletResponse response){
+    public static void exportExcel(List<List<Object>> data, List<String> headers, String sheetName, HttpServletResponse response){
 
         if(data!=null && data.size() > 0) {
             //获取分页指标
@@ -73,8 +73,13 @@ public class ExcelUtil {
 
                         for (int i = 0; i < data.get(n).size(); i++) {
                             sheetcell = (SXSSFCell) sheet_rows.createCell(i);
-                            sheetcell.setCellValue(String.valueOf(data.get(n).get(i)));
-                            sheetcell.setCellStyle(style);
+                            if(data.get(n).get(i) == null){
+                                sheetcell.setCellValue("");
+                                sheetcell.setCellStyle(style);
+                            }else {
+                                sheetcell.setCellValue(String.valueOf(data.get(n).get(i)));
+                                sheetcell.setCellStyle(style);
+                            }
                         }
                         sheet_row = sheet_row + 1;
                         sheet_rows = null;

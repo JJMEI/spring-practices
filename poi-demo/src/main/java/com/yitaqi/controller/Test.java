@@ -28,7 +28,7 @@ public class Test {
         List<String>  headers = Lists.newArrayList("支付日期","订单号","订单类型","退款日期","用户ID","收款公司","业务线","支付渠道","SKU编码","商品名称","第三方流水号","支付金额","华视分成金额","商品类型","渠道来源(cpsno)");
 
 
-        List<List<String>> data = Lists.newArrayList();
+        List<List<Object>> data = Lists.newArrayList();
         for(int i=0;i<100000;i++){
             data.add(Lists.newArrayList(
                     new Date().toLocaleString(),"582594057304875037458","收款",new Date().toLocaleString(),
