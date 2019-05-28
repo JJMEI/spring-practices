@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/tx
+                           http://www.springframework.org/schema/tx/spring-tx.xsd
+                           http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/aop
+                           https://www.springframework.org/schema/aop/spring-aop.xsd">
+
+
+    <!--具备事务性对象-->
+    <bean id="fooService" class="com.yitaqi.v2.service.impl.DefaultFooService"/>
+
+
+    <tx:advice id="txAdvice" transaction-manager="txManager">
+        <tx:attributes>
+
+            <!--所有已get开头的方法使用 只读事务-->
+            <tx:method name="get*" read-only="true" no-rollback-for="java.lang.UnsupportedOperationException"/>
+
+            <!--其他方式使用默认的事务设置-->
+            <tx:method name="*" rollback-for="java.lang.UnsupportedOperationException"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <aop:config>
+        <aop:pointcut id="fooServiceOperation" expression="execution(* com.yitaqi.v1.service.FooService.*(..))"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="fooServiceOperation"/>
+    </aop:config>
+
+
+
+
+    <!--配置事务管理器 使用默认的数据源管理器针对JDBC  PlatformTransactionManager-->
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!--使用光数据源连接池-->
+    <bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/spring"/>
+        <property name="username" value="root"/>
+        <property name="password" value="123456"/>
+    </bean>
+
+</beans>
